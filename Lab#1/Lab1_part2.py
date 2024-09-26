@@ -23,5 +23,5 @@ try:
 		
 except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the next two lines will be executed:
 	GPIO.output(LedPin1, GPIO.HIGH)     # turn LED off
-  GPIO.output(LedPin2, GPIO.HIGH)     # turn LED off
+  	GPIO.output(LedPin2, GPIO.HIGH)     # turn LED off
 	GPIO.cleanup()                     # Release resource
