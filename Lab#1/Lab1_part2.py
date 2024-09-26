@@ -18,7 +18,7 @@ try:
 		time.sleep(1)
 		print ('led off...')
 		GPIO.output(LedPin1, GPIO.HIGH)
-    GPIO.output(LedPin2, GPIO.LOW)  
+    		GPIO.output(LedPin2, GPIO.LOW)  
 		time.sleep(1)
 		
 except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the next two lines will be executed:
