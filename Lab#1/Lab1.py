@@ -16,10 +16,10 @@ try:
 	while True:
 		print ('...led on')
 		GPIO.output(LedPin, GPIO.LOW)  # LED on
-		time.sleep(10)
+		time.sleep(5)
 		print ('led off...')
 		GPIO.output(LedPin, GPIO.HIGH) # LED off
-		time.sleep(10)
+		time.sleep(5)
 		
 except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the next two lines will be executed:
 	GPIO.output(LedPin, GPIO.HIGH)     # turn LED off
