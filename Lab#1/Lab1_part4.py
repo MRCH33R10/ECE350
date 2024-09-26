@@ -19,6 +19,10 @@ try:
 		GPIO.output(A, GPIO.HIGH)
 		time.sleep(0.2)
 		GPIO.output(A, GPIO.LOW)
+		if A == LedPin1:
+			A = LedPin2
+		else:
+			A = LedPin1
     
 except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the next two lines will be executed:
 	GPIO.output(LedPin1, GPIO.HIGH)     # turn LED off
