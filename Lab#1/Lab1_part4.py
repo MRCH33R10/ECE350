@@ -12,11 +12,13 @@ GPIO.output(LedPin2, GPIO.HIGH) # Set pin to high (+3.3V) to turn LED off
 A = LedPin1
 try:
 	while True:
-    GPIO.output(A, GPIO.LOW) 
-		time.sleep()
-		GPIO.output(LedPin1, GPIO.HIGH)
-		GPIO.output(LedPin2, GPIO.LOW)  
-		time.sleep(1)
+    		GPIO.output(A, GPIO.HIGH)
+		time.sleep(0.1)
+		GPIO.output(A, GPIO.LOW)
+		time.sleep(0.3)
+		GPIO.output(A, GPIO.HIGH)  
+		time.sleep(0.2)
+		GPIO.output(A, GPIO.LOW)
     
 except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the next two lines will be executed:
 	GPIO.output(LedPin1, GPIO.HIGH)     # turn LED off
