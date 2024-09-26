@@ -13,12 +13,13 @@ A = LedPin1
 try:
 	while True:
 		GPIO.output(A, GPIO.LOW) #on
-		time.sleep(0.1)
+		time.sleep(0.2)
 		GPIO.output(A, GPIO.HIGH) #off
-		time.sleep(0.3)
+		time.sleep(0.1)
 		GPIO.output(A, GPIO.LOW) #on
 		time.sleep(0.2)
 		GPIO.output(A, GPIO.HIGH) #off
+		time.sleep(0.6)
 		if A == LedPin1:
 			A = LedPin2
 		else:
