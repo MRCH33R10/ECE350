@@ -16,7 +16,7 @@ try:
 		GPIO.output(LedPin2, GPIO.HIGH) 
 		time.sleep(1)
 		GPIO.output(LedPin1, GPIO.HIGH)
-    		GPIO.output(LedPin2, GPIO.LOW)  
+		GPIO.output(LedPin2, GPIO.LOW)  
 		time.sleep(1)
 		
 except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the next two lines will be executed:
