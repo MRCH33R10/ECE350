@@ -12,13 +12,13 @@ GPIO.output(LedPin2, GPIO.HIGH) # Set pin to high (+3.3V) to turn LED off
 A = LedPin1
 try:
 	while True:
-		GPIO.output(A, GPIO.HIGH)
+		GPIO.output(A, GPIO.LOW) #on
 		time.sleep(0.1)
-		GPIO.output(A, GPIO.LOW)
+		GPIO.output(A, GPIO.HIGH) #off
 		time.sleep(0.3)
-		GPIO.output(A, GPIO.HIGH)
+		GPIO.output(A, GPIO.LOW) #on
 		time.sleep(0.2)
-		GPIO.output(A, GPIO.LOW)
+		GPIO.output(A, GPIO.HIGH) #off
 		if A == LedPin1:
 			A = LedPin2
 		else:
