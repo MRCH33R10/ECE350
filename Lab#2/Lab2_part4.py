@@ -15,22 +15,22 @@ for i in OutLowArr:
 
 try:
 	while True:
-    		for i in tmeARR:
+		for i in tmeARR:
 			for x in range(100): #100Hz
-      				GPIO.setup(OutlowArr[1], GPIO.HIGH)
+				GPIO.setup(OutlowArr[1], GPIO.HIGH)
 				GPIO.output(OutlowArr[0], GPIO.HIGH)
-        			time.sleep(i/100)
-      				GPIO.setup(OutlowArr[1], GPIO.HIGH)
+				time.sleep(i/100)
+				GPIO.setup(OutlowArr[1], GPIO.HIGH)
 				GPIO.output(OutlowArr[0], GPIO.HIGH)
-        			time.sleep((1-i)/100)
+				time.sleep((1-i)/100)
         			
         
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
-  	for y in OutLowArr:  
+	for y in OutLowArr:  
 		GPIO.output(y, GPIO.LOW) # LED off
 		GPIO.output(y, GPIO.LOW) # Buzzer off
-	GPIO.cleanup()                          #cleanup all used GPIO pins
-	print ("Ending program")                #print end of program to terminal
+		GPIO.cleanup()                          #cleanup all used GPIO pins
+		print ("Ending program")                #print end of program to terminal
   
 
 
