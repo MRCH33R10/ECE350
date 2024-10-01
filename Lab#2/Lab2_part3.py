@@ -19,7 +19,7 @@ GPIO.setup(BzrPin, GPIO.LOW)  # Set BzrPin's output to low-turn buzzer off at st
 #Print status of LED on the screen to the user 
 try:
 	while True:
-    		for i in tmeARR;
+    		for i in tmeARR:
       			if IO == 1:
         			GPIO.setup(BzrPin, GPIO.HIGH)
       			else
