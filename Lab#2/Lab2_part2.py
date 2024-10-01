@@ -3,7 +3,7 @@
 import RPi.GPIO as GPIO
 import time
 
-#(LedPin1, BzrPin, LedPin2)
+#(LedPin1, LedPin2, BzrPin)
 OutLowArr = [11, 15, 12]
 # (BtPin1, BtPin2)
 BtnArr = [13, 16]
