@@ -24,14 +24,14 @@ try:
 				GPIO.setup(BzrPin, GPIO.HIGH)
 			else:
 				GPIO.setup(BzrPin, GPIO.LOW)
-      			time.sleep(i)
-      			IO = IO ^ 1
-    		for x in freqARR:
-      			for y in range(x):
-        			GPIO.setup(BzrPin, GPIO.HIGH)
-        			time.sleep(.9/x)
-        			GPIO.setup(BzrPin, GPIO.LOW)
-        			time.sleep(.1/x)
+			time.sleep(i)
+			IO = IO ^ 1
+		for x in freqARR:
+			for y in range(x):
+				GPIO.setup(BzrPin, GPIO.HIGH)
+				time.sleep(.9/x)
+				GPIO.setup(BzrPin, GPIO.LOW)
+				time.sleep(.1/x)
         
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
 	GPIO.output(BzrPin, GPIO.LOW) # Buzzer off
