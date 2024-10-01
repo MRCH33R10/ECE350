@@ -32,7 +32,7 @@ try:
         		IO2 = IO2 ^ 1
 
 	if IO1 == 1 or IO2 == 1:
-        	GPIO.output(OutLowArr[IO2], GPIO.HIGH)  # turn led on
+		GPIO.output(OutLowArr[IO2], GPIO.HIGH)  # turn led on
 		GPIO.output(OutLowArr[IO1], GPIO.LOW)  # turn led on
 		GPIO.output(12, GPIO.LOW) # buzzer off
 		print("...SINGLE LED ON")
