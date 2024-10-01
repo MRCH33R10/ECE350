@@ -29,32 +29,34 @@ for x in
 #Print status of LED on the screen to the user 
 try:
 	while True:
-			if	GPIO.input(BtnArr[0]) == GPIO.LOW:
-        IO1 = IO1 ^ 1
-			if	GPIO.input(BtnArr[1]) == GPIO.LOW:
-        IO2 = IO2 ^ 1
+		if	GPIO.input(BtnArr[0]) == GPIO.LOW:
+        		IO1 = IO1 ^ 1
+		if	GPIO.input(BtnArr[1]) == GPIO.LOW:
+        		IO2 = IO2 ^ 1
 
 
 
-      if IO1 == 1 or IO2 == 1:
-        GPIO.output(OutLowArr[IO2], GPIO.HIGH)  # turn led on
-        GPIO.output(OutLowArr[IO1], GPIO.LOW)  # turn led on
-				print("...SINGLE LED ON")
-      elif IO1 == 1 and IO2 == 1:
-        GPIO.output(OutLowArr[2], GPIO.HIGH)
-        GPIO.output(OutLowArr[1], GPIO.HIGH)
-        GPIO.output(OutLowArr[0], GPIO.HIGH)
-				print("...BOTH LED ON")
-      else:
-        GPIO.output(LedPin, GPIO.LOW) # led off
-				GPIO.output(BzrPin, GPIO.LOW) # buzzer off
-				print("ALL LED OFF...")
+      	if IO1 == 1 or IO2 == 1:
+        	GPIO.output(OutLowArr[IO2], GPIO.HIGH)  # turn led on
+        	GPIO.output(OutLowArr[IO1], GPIO.LOW)  # turn led on
+		GPIO.output(OutLowArr[2], GPIO.LOW) # buzzer off
+		print("...SINGLE LED ON")
+      	elif IO1 == 1 and IO2 == 1:
+        	GPIO.output(OutLowArr[2], GPIO.HIGH)
+        	GPIO.output(OutLowArr[1], GPIO.HIGH)
+        	GPIO.output(OutLowArr[0], GPIO.HIGH)
+		print("...BOTH LED ON")
+      	else:
+        	GPIO.output(OutLowArr[0], GPIO.LOW) # led off
+		GPIO.output(OutLowArr[1], GPIO.LOW) # led off
+		GPIO.output(OutLowArr[2], GPIO.LOW) # buzzer off
+		print("ALL LED OFF...")
 
 
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
-  for y in OutLowArr:  
-	  GPIO.output(y, GPIO.LOW) # LED off
-	  GPIO.output(y, GPIO.LOW) # Buzzer off
+  	for y in OutLowArr:  
+		GPIO.output(y, GPIO.LOW) # LED off
+		GPIO.output(y, GPIO.LOW) # Buzzer off
 	GPIO.cleanup()                          #cleanup all used GPIO pins
 	print ("Ending program")                #print end of program to terminal
   
