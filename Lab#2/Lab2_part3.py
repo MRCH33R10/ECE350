@@ -21,9 +21,9 @@ try:
 	while True:
     		for i in tmeARR:
       			if IO == 1:
-        			GPIO.setup(BzrPin, GPIO.HIGH)
+				GPIO.setup(BzrPin, GPIO.HIGH)
 			else:
-        			GPIO.setup(BzrPin, GPIO.LOW)
+				GPIO.setup(BzrPin, GPIO.LOW)
       			time.sleep(i)
       			IO = IO ^ 1
     		for x in freqARR:
