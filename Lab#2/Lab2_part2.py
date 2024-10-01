@@ -15,7 +15,7 @@ GPIO.setmode(GPIO.BOARD)       # Numbers GPIOs by physical location
 for i in OutLowArr:  
   GPIO.setup(i, GPIO.OUT)   # Set LedPin's mode as output
   GPIO.setup(i, GPIO.LOW)   #Set BzrPin's output to low-turn LED off at start
-for x in 
+for x in BtnArr:
   GPIO.setup(x, GPIO.IN, pull_up_down=GPIO.PUD_UP)    # Set BtnPin's mode as input, and pull
 
 
