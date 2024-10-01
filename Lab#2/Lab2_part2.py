@@ -36,13 +36,13 @@ try:
         	GPIO.output(OutLowArr[IO1], GPIO.LOW)  # turn led on
 		GPIO.output(OutLowArr[2], GPIO.LOW) # buzzer off
 		print("...SINGLE LED ON")
-      	elif IO1 == 1 and IO2 == 1:
-        	GPIO.output(OutLowArr[2], GPIO.HIGH)
-        	GPIO.output(OutLowArr[1], GPIO.HIGH)
-        	GPIO.output(OutLowArr[0], GPIO.HIGH)
+	elif IO1 == 1 and IO2 == 1:
+		GPIO.output(OutLowArr[2], GPIO.HIGH)
+		GPIO.output(OutLowArr[1], GPIO.HIGH)
+		GPIO.output(OutLowArr[0], GPIO.HIGH)
 		print("...BOTH LED ON")
-      	else:
-        	GPIO.output(OutLowArr[0], GPIO.LOW) # led off
+	else:
+		GPIO.output(OutLowArr[0], GPIO.LOW) # led off
 		GPIO.output(OutLowArr[1], GPIO.LOW) # led off
 		GPIO.output(OutLowArr[2], GPIO.LOW) # buzzer off
 		print("ALL LED OFF...")
