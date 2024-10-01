@@ -3,9 +3,6 @@
 import RPi.GPIO as GPIO
 import time
 
-LedPin = 11    # pin11 LED Pin
-BzrPin = 12    # pin12 Buzzer Pin
-BtnPin = 13    # pin13 Button Pin
 #(LedPin1, BzrPin, LedPin2)
 OutLowArr = [11, 15, 12]
 # (BtPin1, BtPin2)
