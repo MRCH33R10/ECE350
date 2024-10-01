@@ -22,7 +22,7 @@ try:
     		for i in tmeARR:
       			if IO == 1:
         			GPIO.setup(BzrPin, GPIO.HIGH)
-      			else
+			else:
         			GPIO.setup(BzrPin, GPIO.LOW)
       			time.sleep(i)
       			IO = IO ^ 1
