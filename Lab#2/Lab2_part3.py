@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 import time
 
 BzrPin = 12    # pin12 Buzzer Pin
-tmeARR = [0.1, 0.9, 0.4, 0.6, 0.9, 0.1, 0.1, 0.9, 0.4, 0.6, 0.9, 0.1]
+tmeARR = [0.01, 0.4, 0.9, 0.01, 0.4, 0.9]
 freqARR = [200,400,600,200,400,600]
 IO = 1
 GPIO.setmode(GPIO.BOARD)       # Numbers GPIOs by physical location
@@ -20,12 +20,10 @@ GPIO.setup(BzrPin, GPIO.LOW)  # Set BzrPin's output to low-turn buzzer off at st
 try:
 	while True:
 		for i in tmeARR:
-			if IO == 1:
-				GPIO.setup(BzrPin, GPIO.HIGH)
-			else:
-				GPIO.setup(BzrPin, GPIO.LOW)
+			GPIO.setup(BzrPin, GPIO.HIGH)
 			time.sleep(i)
-			IO = IO ^ 1
+			GPIO.setup(BzrPin, GPIO.LOW)
+			time.sleep(1.0-i)
 		for x in freqARR:
 			for y in range(x):
 				GPIO.setup(BzrPin, GPIO.HIGH)
