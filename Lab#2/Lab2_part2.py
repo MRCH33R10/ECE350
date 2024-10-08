@@ -19,25 +19,35 @@ for x in BtnArr:
   GPIO.setup(x, GPIO.IN, pull_up_down=GPIO.PUD_UP)    # Set BtnPin's mode as input, and pull
 
 
+def statechange():
+	x = 0
+	if IO1 == 1:
+		x += 1
+	if IO2 == 1:
+		x += 1
+	return x
 
+def buttonfunction(x):
+	c = 0
+	while	GPIO.input(x) == GPIO.LOW:
+		c = 1
+	return c
 #Poll the input of the BtnPin continuously to detect if its state is high or low. If low, button is pressed 
 # so turn on the LED by applying a high value to LEDPin to turn LED on and apply a high value to BzrPin to turn
 # on the buzzer. Otherwise output low value from both pins to keep both LED and buzzer off. 
 #Print status of LED on the screen to the user 
 try:
 	while True:
-		if	GPIO.input(BtnArr[0]) == GPIO.LOW:
+		if buttonfunction(BtnArr[0]) == 1:
 			IO1 = IO1 ^ 1
-			time.sleep(0.5)
-		if	GPIO.input(BtnArr[1]) == GPIO.LOW:
+		if buttonfunction(BtnArr[1]) == 1:
 			IO2 = IO2 ^ 1
-			time.sleep(0.5)
-		if IO1 == 1 or IO2 == 1:
+		if statechange() == 1:
 			GPIO.output(OutLowArr[IO2], GPIO.HIGH)  # turn led on
 			GPIO.output(OutLowArr[IO1], GPIO.LOW)  # turn led on
 			GPIO.output(12, GPIO.LOW) # buzzer off
 			print("...SINGLE LED ON")
-		elif IO1 == 1 and IO2 == 1:
+		elif statechange() == 2:
 			GPIO.output(11, GPIO.HIGH)
 			GPIO.output(12, GPIO.HIGH)
 			GPIO.output(15, GPIO.HIGH)
