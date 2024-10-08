@@ -6,7 +6,6 @@ import time
 BzrPin = 12    # pin12 Buzzer Pin
 tmeARR = [0.01, 0.4, 0.9, 0.01, 0.4, 0.9]
 freqARR = [200,400,600,200,400,600]
-IO = 1
 GPIO.setmode(GPIO.BOARD)       # Numbers GPIOs by physical location
 GPIO.setup(BzrPin, GPIO.OUT)  # Set BzrPin's mode as output
 GPIO.setup(BzrPin, GPIO.LOW)  # Set BzrPin's output to low-turn buzzer off at start
