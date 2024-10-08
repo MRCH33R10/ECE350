@@ -27,7 +27,7 @@ for x in BtnArr:
 try:
 	while True:
 		if	GPIO.input(BtnArr[0]) == GPIO.LOW:
-        		IO1 = IO1 ^ 1
+			IO1 = IO1 ^ 1
 			time.sleep(1)
 		if	GPIO.input(BtnArr[1]) == GPIO.LOW:
         		IO2 = IO2 ^ 1
