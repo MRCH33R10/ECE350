@@ -28,10 +28,10 @@ try:
 	while True:
 		if	GPIO.input(BtnArr[0]) == GPIO.LOW:
 			IO1 = IO1 ^ 1
-			time.sleep(1)
+			time.sleep(0.5)
 		if	GPIO.input(BtnArr[1]) == GPIO.LOW:
 			IO2 = IO2 ^ 1
-			time.sleep(1)
+			time.sleep(0.5)
 		if IO1 == 1 or IO2 == 1:
 			GPIO.output(OutLowArr[IO2], GPIO.HIGH)  # turn led on
 			GPIO.output(OutLowArr[IO1], GPIO.LOW)  # turn led on
