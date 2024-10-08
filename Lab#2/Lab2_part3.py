@@ -19,7 +19,6 @@ GPIO.setup(BzrPin, GPIO.LOW)  # Set BzrPin's output to low-turn buzzer off at st
 try:
 	while True:
 		for i in tmeARR:
-			print("check")
 			GPIO.output(BzrPin, GPIO.HIGH)
 			time.sleep(i)
 			GPIO.output(BzrPin, GPIO.LOW)
