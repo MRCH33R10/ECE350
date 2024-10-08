@@ -31,21 +31,21 @@ try:
 		if	GPIO.input(BtnArr[1]) == GPIO.LOW:
         		IO2 = IO2 ^ 1
 
-	if IO1 == 1 or IO2 == 1:
-		GPIO.output(OutLowArr[IO2], GPIO.HIGH)  # turn led on
-		GPIO.output(OutLowArr[IO1], GPIO.LOW)  # turn led on
-		GPIO.output(12, GPIO.LOW) # buzzer off
-		print("...SINGLE LED ON")
-	elif IO1 == 1 and IO2 == 1:
-		GPIO.output(11, GPIO.HIGH)
-		GPIO.output(12, GPIO.HIGH)
-		GPIO.output(15, GPIO.HIGH)
-		print("...BOTH LED ON")
-	else:
-		GPIO.output(11, GPIO.LOW) # led off
-		GPIO.output(12, GPIO.LOW) # led off
-		GPIO.output(15, GPIO.LOW) # buzzer off
-		print("ALL LED OFF...")
+		if IO1 == 1 or IO2 == 1:
+			GPIO.output(OutLowArr[IO2], GPIO.HIGH)  # turn led on
+			GPIO.output(OutLowArr[IO1], GPIO.LOW)  # turn led on
+			GPIO.output(12, GPIO.LOW) # buzzer off
+			print("...SINGLE LED ON")
+		elif IO1 == 1 and IO2 == 1:
+			GPIO.output(11, GPIO.HIGH)
+			GPIO.output(12, GPIO.HIGH)
+			GPIO.output(15, GPIO.HIGH)
+			print("...BOTH LED ON")
+		else:
+			GPIO.output(11, GPIO.LOW) # led off
+			GPIO.output(12, GPIO.LOW) # led off
+			GPIO.output(15, GPIO.LOW) # buzzer off
+			print("ALL LED OFF...")
 
 
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
