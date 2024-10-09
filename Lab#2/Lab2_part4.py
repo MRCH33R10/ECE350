@@ -19,10 +19,10 @@ try:
 			for x in range(200): #100Hz
 				GPIO.output(OutLowArr[1], GPIO.HIGH)
 				GPIO.output(OutLowArr[0], GPIO.HIGH)
-				time.sleep(i/200)
+				time.sleep(i/100)
 				GPIO.output(OutLowArr[1], GPIO.LOW)
 				GPIO.output(OutLowArr[0], GPIO.LOW)
-				time.sleep((1-i)/200)				
+				time.sleep((1-i)/100)				
         
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
 	for y in OutLowArr:  
