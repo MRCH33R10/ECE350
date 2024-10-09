@@ -23,7 +23,7 @@ try:
 				time.sleep(i/200000)
 				GPIO.output(OutLowArr[1], GPIO.LOW)
 				GPIO.output(OutLowArr[0], GPIO.LOW)
-				time.sleep((1000-i)/200000)
+				time.sleep((1000-i)/100000)
 
 		GPIO.output(OutLowArr[1], GPIO.HIGH)
 		GPIO.output(OutLowArr[0], GPIO.HIGH)
@@ -31,7 +31,7 @@ try:
 			for w in range(1):
 				GPIO.output(OutLowArr[1], GPIO.HIGH)
 				GPIO.output(OutLowArr[0], GPIO.HIGH)
-				time.sleep((1000-i)/200000)
+				time.sleep((1000-i)/100000)
 				GPIO.output(OutLowArr[1], GPIO.LOW)
 				GPIO.output(OutLowArr[0], GPIO.LOW)
 				time.sleep(i/200000)
