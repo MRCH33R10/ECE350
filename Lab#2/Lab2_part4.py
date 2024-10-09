@@ -15,7 +15,7 @@ for i in OutLowArr:
 
 try:
 	while True:
-		for i in tmeArr:
+		for i in tmeARR:
 			for x in range(200): #100Hz
 				GPIO.output(OutLowArr[1], GPIO.HIGH)
 				GPIO.output(OutLowArr[0], GPIO.HIGH)
