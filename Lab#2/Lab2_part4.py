@@ -15,14 +15,13 @@ for i in OutLowArr:
 
 try:
 	while True:
-		for i in tmeARR:
-			for x in range(200): #100Hz
-				GPIO.output(OutLowArr[1], GPIO.HIGH)
-				GPIO.output(OutLowArr[0], GPIO.HIGH)
-				time.sleep(i/100)
-				GPIO.output(OutLowArr[1], GPIO.LOW)
-				GPIO.output(OutLowArr[0], GPIO.LOW)
-				time.sleep((1-i)/100)				
+		for i in range(1,50):
+			GPIO.output(OutLowArr[1], GPIO.HIGH)
+			GPIO.output(OutLowArr[0], GPIO.HIGH)
+			time.sleep(i/50)
+			GPIO.output(OutLowArr[1], GPIO.LOW)
+			GPIO.output(OutLowArr[0], GPIO.LOW)
+			time.sleep((1-i)/50)				
         
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
 	for y in OutLowArr:  
