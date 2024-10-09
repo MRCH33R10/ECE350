@@ -14,6 +14,8 @@ for i in OutLowArr:
 
 try:
 	while True:
+		GPIO.output(OutLowArr[1], GPIO.LOW)
+		GPIO.output(OutLowArr[0], GPIO.LOW)
 		for i in range(1,99):
 			for w in range(2):
 				GPIO.output(OutLowArr[1], GPIO.HIGH)
@@ -22,6 +24,8 @@ try:
 				GPIO.output(OutLowArr[1], GPIO.LOW)
 				GPIO.output(OutLowArr[0], GPIO.LOW)
 				time.sleep((100-i)/20000)
+		GPIO.output(OutLowArr[1], GPIO.HIGH)
+		GPIO.output(OutLowArr[0], GPIO.HIGH)
 		for i in range(1,99):
 			for w in range(2):
 				GPIO.output(OutLowArr[1], GPIO.HIGH)
