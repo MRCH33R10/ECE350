@@ -20,8 +20,8 @@ try:
 				GPIO.output(OutLowArr[1], GPIO.HIGH)
 				GPIO.output(OutLowArr[0], GPIO.HIGH)
 				time.sleep(i/100)
-				GPIO.output(OutLowArr[1], GPIO.HIGH)
-				GPIO.output(OutLowArr[0], GPIO.HIGH)
+				GPIO.output(OutLowArr[1], GPIO.LOW)
+				GPIO.output(OutLowArr[0], GPIO.LOW)
 				time.sleep((1-i)/100)
         			
         
