@@ -17,10 +17,10 @@ try:
 	while True:
 		for i in tmeARR:
 			for x in range(100): #100Hz
-				GPIO.setup(OutLowArr[1], GPIO.HIGH)
+				GPIO.output(OutLowArr[1], GPIO.HIGH)
 				GPIO.output(OutLowArr[0], GPIO.HIGH)
 				time.sleep(i/100)
-				GPIO.setup(OutLowArr[1], GPIO.HIGH)
+				GPIO.output(OutLowArr[1], GPIO.HIGH)
 				GPIO.output(OutLowArr[0], GPIO.HIGH)
 				time.sleep((1-i)/100)
         			
