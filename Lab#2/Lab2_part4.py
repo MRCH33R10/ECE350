@@ -22,7 +22,7 @@ try:
 				time.sleep((1/i)*(1/100))
 				GPIO.output(OutLowArr[1], GPIO.LOW)
 				GPIO.output(OutLowArr[0], GPIO.LOW)
-				time.sleep((1-1/i)*(1/100)
+				time.sleep((1-1/i)*(1/100))
         			
         
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
