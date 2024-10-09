@@ -16,12 +16,13 @@ for i in OutLowArr:
 try:
 	while True:
 		for i in range(1,9):
-			GPIO.output(OutLowArr[1], GPIO.HIGH)
-			GPIO.output(OutLowArr[0], GPIO.HIGH)
-			time.sleep(i/2000)
-			GPIO.output(OutLowArr[1], GPIO.LOW)
-			GPIO.output(OutLowArr[0], GPIO.LOW)
-			time.sleep((10-i)/2000)				
+			for i in range(400):
+				GPIO.output(OutLowArr[1], GPIO.HIGH)
+				GPIO.output(OutLowArr[0], GPIO.HIGH)
+				time.sleep(i/2000)
+				GPIO.output(OutLowArr[1], GPIO.LOW)
+				GPIO.output(OutLowArr[0], GPIO.LOW)
+				time.sleep((10-i)/2000)				
         
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
 	for y in OutLowArr:  
