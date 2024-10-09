@@ -28,9 +28,9 @@ try:
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
 	for y in OutLowArr:  
 		GPIO.output(y, GPIO.LOW) # LED off
-		GPIO.output(y, GPIO.LOW) # Buzzer off
-		GPIO.cleanup()                          #cleanup all used GPIO pins
-		print ("Ending program")                #print end of program to terminal
+		GPIO.output(y, GPIO.LOW) # Buzzer off		
+	GPIO.cleanup()                          #cleanup all used GPIO pins
+	print ("Ending program")                #print end of program to terminal
   
 
 
