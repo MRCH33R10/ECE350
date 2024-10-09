@@ -23,7 +23,6 @@ try:
 				GPIO.output(OutLowArr[1], GPIO.LOW)
 				GPIO.output(OutLowArr[0], GPIO.LOW)
 				time.sleep((1-i)/200)
-		for i in tmeARR:
 			for x in range(200): #100Hz
 				GPIO.output(OutLowArr[1], GPIO.HIGH)
 				GPIO.output(OutLowArr[0], GPIO.HIGH)
