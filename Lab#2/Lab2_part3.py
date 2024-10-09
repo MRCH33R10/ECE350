@@ -18,17 +18,17 @@ GPIO.setup(BzrPin, GPIO.LOW)  # Set BzrPin's output to low-turn buzzer off at st
 #Print status of LED on the screen to the user 
 try:
 	while True:
-		for i in tmeARR:
-			GPIO.output(BzrPin, GPIO.HIGH)
-			time.sleep(i)
-			GPIO.output(BzrPin, GPIO.LOW)
-			time.sleep(1.0-i)
-		# for x in freqARR:
-		# 	for y in range(x):
-		# 		GPIO.output(BzrPin, GPIO.HIGH)
-		# 		time.sleep(.9/x)
-		# 		GPIO.output(BzrPin, GPIO.LOW)
-		# 		time.sleep(.1/x)
+		# for i in tmeARR:
+		# 	GPIO.output(BzrPin, GPIO.HIGH)
+		# 	time.sleep(i)
+		# 	GPIO.output(BzrPin, GPIO.LOW)
+		# 	time.sleep(1.0-i)
+		for x in freqARR:
+			for y in range(x):
+				GPIO.output(BzrPin, GPIO.HIGH)
+				time.sleep(.9/x)
+				GPIO.output(BzrPin, GPIO.LOW)
+				time.sleep(.1/x)
         
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
 	GPIO.output(BzrPin, GPIO.LOW) # Buzzer off
