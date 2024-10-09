@@ -21,7 +21,7 @@ try:
 			time.sleep(i/200)
 			GPIO.output(OutLowArr[1], GPIO.LOW)
 			GPIO.output(OutLowArr[0], GPIO.LOW)
-			time.sleep(50-i/200)				
+			time.sleep((50-i)/200)				
         
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
 	for y in OutLowArr:  
