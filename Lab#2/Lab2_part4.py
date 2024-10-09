@@ -20,28 +20,21 @@ try:
 			for w in range(1):
 				GPIO.output(OutLowArr[1], GPIO.HIGH)
 				GPIO.output(OutLowArr[0], GPIO.HIGH)
-				time.sleep(i/400000)
+				time.sleep(i/200000)
 				GPIO.output(OutLowArr[1], GPIO.LOW)
 				GPIO.output(OutLowArr[0], GPIO.LOW)
-				time.sleep((1000-i)/400000)
-				GPIO.output(OutLowArr[1], GPIO.HIGH)
-				time.sleep(i/400000)
-				GPIO.output(OutLowArr[1], GPIO.LOW)
-				time.sleep((1000-i)/400000)
+				time.sleep((1000-i)/200000)
+
 		GPIO.output(OutLowArr[1], GPIO.HIGH)
 		GPIO.output(OutLowArr[0], GPIO.HIGH)
 		for i in range(1,999):
 			for w in range(1):
 				GPIO.output(OutLowArr[1], GPIO.HIGH)
 				GPIO.output(OutLowArr[0], GPIO.HIGH)
-				time.sleep((1000-i)/400000)
+				time.sleep((1000-i)/200000)
 				GPIO.output(OutLowArr[1], GPIO.LOW)
 				GPIO.output(OutLowArr[0], GPIO.LOW)
-				time.sleep(i/400000)
-				GPIO.output(OutLowArr[1], GPIO.HIGH)
-				time.sleep((1000-i)/400000)
-				GPIO.output(OutLowArr[1], GPIO.LOW)
-				time.sleep(i/400000)	
+				time.sleep(i/200000)
         
 except KeyboardInterrupt:               #set up keyboard interrupt ctrl C
 	for y in OutLowArr:  
