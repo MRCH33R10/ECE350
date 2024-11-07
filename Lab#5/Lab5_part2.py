@@ -62,8 +62,10 @@ def loop():
         if current_state != last_state:
             if GPIO.input(DT) != current_state:
                 counter += 1
+                time.sleep(0.1)
             else:
                 counter -= 1
+                time.sleep(0.1)
             print(f"Counter: {counter}")
         else:
             if counter > 0:
