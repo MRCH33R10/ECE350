@@ -24,11 +24,11 @@ def setStep(w1, w2, w3, w4):
     GPIO.output(IN4, w4)
 
 def setup():
-    GPIO.setmode(GPIO.BOARD)       # Numbers GPIOs by physical location
-    GPIO.setup(RoAPin, GPIO.IN)    # input mode
+    GPIO.setmode(GPIO.BOARD)      
+    GPIO.setup(RoAPin, GPIO.IN)   
     GPIO.setup(RoBPin, GPIO.IN)
-    GPIO.setup(ButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Button with pull-up resistor
-    GPIO.setup(IN1, GPIO.OUT)      # Set pin's mode is output  
+    GPIO.setup(ButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)  
+    GPIO.setup(IN1, GPIO.OUT)       
     GPIO.setup(IN2, GPIO.OUT)
     GPIO.setup(IN3, GPIO.OUT)
     GPIO.setup(IN4, GPIO.OUT)
@@ -114,13 +114,13 @@ def rotaryDeal():
 
 def loop():
     global globalCounter
-    tmp = 0  # Rotary Temporary
+    tmp = 0 
 
     while True:
-        if GPIO.input(ButtonPin) == GPIO.LOW:  # Button pressed
+        if GPIO.input(ButtonPin) == GPIO.LOW:
             globalCounter = 0
             print("Global counter reset to 0")
-            time.sleep(0.5)  # Debounce delay
+            time.sleep(0.5)  
 
         rotaryDeal()
         if tmp != globalCounter:
@@ -139,9 +139,9 @@ def loop():
         time.sleep(0.01)
 
 def destroy():
-    GPIO.cleanup()  # Release resource
+    GPIO.cleanup()
 
-if __name__ == '__main__':  # Program start from here
+if __name__ == '__main__': 
     setup()
     try:
         loop()
