@@ -61,13 +61,13 @@ def loop():
     while True:
         current_state = GPIO.input(CLK)
         time.sleep(0.1)
-        if current_state != last_state:
+        if GPIO.input(CLK) == current_state:  # Confirm state change
             if GPIO.input(DT) != current_state:
                 counter += 1
-                forward(0.003, 512)  
+                forward(0.003, 1)  
             else:
                 counter -= 1
-                backward(0.003, 512)
+                backward(0.003, 1)
             print(f"Counter: {counter}")
         # else:
         #     if counter > 0:
