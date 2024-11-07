@@ -107,11 +107,11 @@ def rotaryDeal():
 		flag = 0
 		if (Last_RoB_Status == 0) and (Current_RoB_Status == 1):
 			globalCounter = globalCounter - 1
-			backward(0.003, 512)  # 512 steps --- 360 angle  
+			backward(0.003, 5120)  # 512 steps --- 360 angle  
 			stop()                 # stop  
 		if (Last_RoB_Status == 1) and (Current_RoB_Status == 0):
 			globalCounter = globalCounter + 1
-			forward(0.003, 512)  # 512 steps --- 360 angle  
+			forward(0.003, 5120)  # 512 steps --- 360 angle  
 			stop()                 # stop  			
 	else:
 		if globalCounter > 0:
