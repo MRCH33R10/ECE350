@@ -69,6 +69,16 @@ def loop():
                 counter -= 1
                 backward(0.003, 512)
             print(f"Counter: {counter}")
+        else:
+            if counter > 0:
+                forward(0.003, 512) 
+                stop()
+                counter -= 1
+            elif counter < 0:
+                backward(0.003, 512)
+                stop()
+                counter += 1
+                    
         last_state = current_state
         time.sleep(0.01)
 
