@@ -60,8 +60,6 @@ def setup():
 	GPIO.setmode(GPIO.BOARD)       # Numbers GPIOs by physical location
 	GPIO.setup(RoAPin, GPIO.IN)    # input mode
 	GPIO.setup(RoBPin, GPIO.IN)
-	GPIO.setup(BtnPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-	GPIO.add_event_detect(BtnPin, GPIO.FALLING, callback=btnISR)
 
 def rotaryDeal():
 	global flag
@@ -79,9 +77,6 @@ def rotaryDeal():
 		if (Last_RoB_Status == 1) and (Current_RoB_Status == 0):
 			globalCounter = globalCounter + 1
 
-def btnISR(channel):
-	global globalCounter
-	globalCounter = 0
 
 def loop():
 	global globalCounter
