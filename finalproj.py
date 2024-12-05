@@ -49,7 +49,7 @@ def blink_led(pin, num_blinks, blink_speed):
         time.sleep(blink_speed)
 
 # Function to record video using OpenCV with USB camera
-def record_video(filename, duration=15):
+def record_video(filename, duration=10):
     cap = cv2.VideoCapture(0)  # Open the camera (index 0 typically corresponds to the first connected USB camera)
     
     if not cap.isOpened():
@@ -115,45 +115,45 @@ def convert_video_to_mp4(input_filename, output_filename):
         print(f"An unexpected error occurred during conversion: {e}")
 
 
-# Function to send email with video attachment
-def send_email(video_filename):
-    # Sender and recipient email addresses
-    fromaddr = "youremail@example.com"  # Replace with your email
-    toaddr = "receiveremail@example.com"  # Replace with recipient's email
+# # Function to send email with video attachment
+# def send_email(video_filename):
+#     # Sender and recipient email addresses
+#     fromaddr = "youremail@example.com"  # Replace with your email
+#     toaddr = "receiveremail@example.com"  # Replace with recipient's email
     
-    # Use the generated App Password instead of your regular password
-    app_password = "YOUR_APP_PASSWORD"  # Replace with your App Password
+#     # Use the generated App Password instead of your regular password
+#     app_password = "YOUR_APP_PASSWORD"  # Replace with your App Password
 
-    # Create the email message
-    msg = MIMEMultipart()
-    msg['From'] = fromaddr
-    msg['To'] = toaddr
-    msg['Subject'] = "Motion Detected: Video Attached"
+#     # Create the email message
+#     msg = MIMEMultipart()
+#     msg['From'] = fromaddr
+#     msg['To'] = toaddr
+#     msg['Subject'] = "Motion Detected: Video Attached"
     
-    # Attach the video file
-    try:
-        with open(video_filename, "rb") as f:
-            part = MIMEBase('application', 'octet-stream')
-            part.set_payload(f.read())
-        encoders.encode_base64(part)
-        part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(video_filename)}')
-        msg.attach(part)
-    except FileNotFoundError:
-        print(f"Error: The file {video_filename} was not found.")
-        return
+#     # Attach the video file
+#     try:
+#         with open(video_filename, "rb") as f:
+#             part = MIMEBase('application', 'octet-stream')
+#             part.set_payload(f.read())
+#         encoders.encode_base64(part)
+#         part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(video_filename)}')
+#         msg.attach(part)
+#     except FileNotFoundError:
+#         print(f"Error: The file {video_filename} was not found.")
+#         return
 
-    # Connect to SMTP server and send email
-    try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)  # Gmail SMTP server
-        server.starttls()
-        server.login(fromaddr, app_password)
-        text = msg.as_string()
-        server.sendmail(fromaddr, toaddr, text)
-        print("Email sent successfully.")
-    except Exception as e:
-        print(f"Failed to send email: {e}")
-    finally:
-        server.quit()
+#     # Connect to SMTP server and send email
+#     try:
+#         server = smtplib.SMTP('smtp.gmail.com', 587)  # Gmail SMTP server
+#         server.starttls()
+#         server.login(fromaddr, app_password)
+#         text = msg.as_string()
+#         server.sendmail(fromaddr, toaddr, text)
+#         print("Email sent successfully.")
+#     except Exception as e:
+#         print(f"Failed to send email: {e}")
+#     finally:
+#         server.quit()
 
 def transfer_and_clear_video_folder(usb_path):
     onboard_path = "/home/pi/VideoLog"
