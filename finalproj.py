@@ -14,10 +14,28 @@ GPIO.setmode(GPIO.BCM)
 
 # PIR motion sensor pin
 pir_pin = 4
+led_pin = 14
 
+clk = 0
 # Set PIR sensor pin as input
 GPIO.setup(pir_pin, GPIO.IN)
+GPIO.setup(led_pin, GPIO.OUT)
 
+# GPIO setup
+GPIO.setmode(GPIO.BCM)  # Use BCM GPIO numbering
+button_pin = 23
+GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Pull-down resistor
+
+# Debounce variables
+button_state = False
+debounce_time = 0.2  # Debounce time in seconds
+
+def blink_led(pin, num_blinks, blink_speed):
+    for _ in range(num_blinks):
+        GPIO.output(pin, GPIO.HIGH)  # Turn the LED on
+        time.sleep(blink_speed)
+        GPIO.output(pin, GPIO.LOW)  # Turn the LED off
+        time.sleep(blink_speed)
 
 # Function to record video using OpenCV with USB camera
 def record_video(filename, duration=10):
@@ -33,8 +51,8 @@ def record_video(filename, duration=10):
     cap.set(cv2.CAP_PROP_FPS, 10)  # Reduce frame rate to 10 FPS to avoid overloading
 
     # Generate a timestamped filename
-    filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S.avi")
-    print(f"Recording video to file: {filename}")
+    filename = datetime.datetime.now().strftime("/media/nthomp8/B33F-EA9A/VideoLog/%Y-%m-%d_%H-%M-%S.avi")
+    # print(f"Recording video to file: {filename}")
 
     # Set codec for video output (MJPEG codec for AVI file)
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')  # 'MJPG' codec
@@ -75,9 +93,9 @@ def record_video(filename, duration=10):
 # Function to convert AVI video to MP4 using ffmpeg
 def convert_video_to_mp4(input_filename, output_filename):
     try:
-        print(f"Converting {input_filename} to {output_filename}")
+        # print(f"Converting {input_filename} to {output_filename}")
         subprocess.run(['ffmpeg', '-i', input_filename, '-c:v', 'libx264', '-c:a', 'aac', '-strict', 'experimental', output_filename], check=True) #Added check=True for error handling
-        print(f"Conversion successful: {output_filename}")
+        # print(f"Conversion successful: {output_filename}")
         os.remove(input_filename) #remove the avi file
     except subprocess.CalledProcessError as e:
         print(f"Error during video conversion: {e}")
@@ -127,22 +145,30 @@ def send_email(video_filename):
     finally:
         server.quit()
 
+
 # Main function to control the flow of the program
 def main():
     while True:
+        if GPIO.input(button_pin) == GPIO.HIGH:
+            if not button_state: # Check if the button state has changed
+                button_state = True
+                clk += 1
+                time.sleep(debounce_time) # Wait for debounce time
         # Check for motion using the PIR sensor
-        if GPIO.input(pir_pin) == GPIO.HIGH:
-            print("Motion detected!")
-
-            # Record video when motion is detected
-            video_filename = "/media/nthomp8/B33F-EA9A/VideoLog/motion_video.mp4" #changed to mp4 to avoid double conversion
-            record_video(video_filename)
+        if clk == 1:
+            blink_led(led_pin, 5, 0.5)
             
-            # Pause for 10 seconds before checking motion again
-            time.sleep(10)
+            if GPIO.input(pir_pin) == GPIO.HIGH:
+                print("Motion detected!")
 
-        else:
-            print("No motion detected.")
+                # Record video when motion is detected
+                video_filename = "motion_video.mp4" #changed to mp4 to avoid double conversion
+                record_video(video_filename)
+                
+                # Pause for 10 seconds before checking motion again
+                time.sleep(10)
+            else:
+                print("No motion detected.")
 
         time.sleep(1)  # Check for motion every 1 second
 
