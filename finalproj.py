@@ -117,13 +117,14 @@ def record_video(filename, duration=30):
         convert_video_to_mp4(filename, mp4_filename)
 
 def smooth_servo_move(target_duty_cycle, steps=10, delay=0.05):
+    global current_servo_duty_cycle #Access and modify the global variable
+
     try:
-        current_duty_cycle = pwm.duty_cycle #Corrected
-        step_size = (target_duty_cycle - current_duty_cycle) / steps
+        step_size = (target_duty_cycle - current_servo_duty_cycle) / steps
 
         for _ in range(steps):
-            current_duty_cycle += step_size
-            pwm.ChangeDutyCycle(current_duty_cycle)
+            current_servo_duty_cycle += step_size
+            pwm.ChangeDutyCycle(current_servo_duty_cycle)
             time.sleep(delay)
     except Exception as e:
         print(f"Error in smooth_servo_move: {e}")
