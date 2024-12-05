@@ -6,7 +6,7 @@ GPIO.setmode(GPIO.BCM)  # Changed to BCM
 GPIO.setwarnings(False)
 
 # Define the GPIO pin connected to the servo (adjust if needed)
-servo_pin = 15  # Example: Change to the actual GPIO pin connected to your servo
+servo_pin = 22  # Example: Change to the actual GPIO pin connected to your servo
 
 # Set up the GPIO pin as output
 GPIO.setup(servo_pin, GPIO.OUT)
