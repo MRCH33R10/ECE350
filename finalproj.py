@@ -17,7 +17,6 @@ GPIO.setmode(GPIO.BCM)
 pir_pin = 4
 led_pinR = 24
 led_pinG = 23
-Motor_pinL = 22
 button_pin = 26
 
 clk = 0# GPIO setup
@@ -26,7 +25,18 @@ clk = 0# GPIO setup
 GPIO.setup(pir_pin, GPIO.IN)
 GPIO.setup(led_pinR, GPIO.OUT)
 GPIO.setup(led_pinG, GPIO.OUT)
-GPIO.setup(Motor_pinL, GPIO.OUT)
+
+GPIO.setmode(GPIO.BCM)  # Changed to BCM
+GPIO.setwarnings(False)
+
+# Define the GPIO pin connected to the servo (adjust if needed)
+servo_pin = 22  # Example: Change to the actual GPIO pin connected to your servo
+
+# Set up the GPIO pin as output
+GPIO.setup(servo_pin, GPIO.OUT)
+
+pwm = GPIO.PWM(servo_pin, 50)
+pwm.start(0)
 
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Pull-down resistor
 
@@ -42,9 +52,7 @@ STATE_TRANSFER = 3
 
 current_state = STATE_INITIAL
 
-pwm = GPIO.PWM(Motor_pinL, 50)
-pwm.start(7.5) # Start the servo with 0 duty cycle ( at 0 deg position )
-current_servo_duty_cycle = 7.5
+
 
 def eject_device(device_path):
     """Ejects a device using the 'sudo eject' command.  Requires root privileges."""
@@ -115,18 +123,20 @@ def record_video(filename, duration=30):
         mp4_filename = filename.replace('.avi', '.mp4')
         convert_video_to_mp4(filename, mp4_filename)
 
-def smooth_servo_move(target_duty_cycle, steps=10, delay=0.05):
-    global current_servo_duty_cycle  #Access and modify the global variable
+def set_servo_angle(angle):
+    """Sets the servo angle. Angle should be between 0 and 180 degrees."""
+    if not 0 <= angle <= 180:
+        raise ValueError("Angle must be between 0 and 180 degrees.")
 
-    try:
-        step_size = (target_duty_cycle - current_servo_duty_cycle) / steps
+    # Calculate duty cycle (adjust these values based on your servo's specifics)
+    duty_cycle = (angle / 180.0) + 0.05 # Calibration may be needed here
 
-        for _ in range(steps):
-            current_servo_duty_cycle += step_size
-            pwm.ChangeDutyCycle(current_servo_duty_cycle)
-            time.sleep(delay)
-    except Exception as e:
-        print(f"Error in smooth_servo_move: {e}")
+    # Map duty cycle to pulse width (approximately)
+    pulse_width = duty_cycle * 20 # 20ms period
+
+    # Set the duty cycle (0 to 100%)
+    pwm.ChangeDutyCycle(pulse_width)
+    time.sleep(0.1)
 
 # Function to convert AVI video to MP4 using ffmpeg
 def convert_video_to_mp4(input_filename, output_filename):
@@ -239,11 +249,11 @@ def main():
                 time.sleep(3)
                 print("Motion detected!")
                 current_state = STATE_RECORDING
-                smooth_servo_move(5, steps=10) # Tells the servo to turn to the left ( -90 deg position )
+                set_servo_angle(90) # Go to 90 degrees
                 video_filename = "vid.mp4"
                 record_video(video_filename)
                 current_state = STATE_ARMED
-                smooth_servo_move(7.5, steps=10) # Tells the servo to turn to the neutral position ( at 0 deg position )
+                set_servo_angle(0) # Go to 0 degrees
                 GPIO.output(led_pinG, GPIO.HIGH)
         elif current_state == STATE_TRANSFER:
             move_folder_contents('/home/nthomp8/Desktop/ECE350/VideoLog', '/media/nthomp8/B33F-EA9A/VideoLog')
@@ -262,4 +272,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("Program interrupted")
     finally:
+        pwm.stop()
         GPIO.cleanup()
