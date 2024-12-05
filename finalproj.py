@@ -14,7 +14,7 @@ GPIO.setmode(GPIO.BCM)
 
 # PIR motion sensor pin
 pir_pin = 4
-led_pin = 23
+led_pin = 14
 
 clk = 0
 # Set PIR sensor pin as input
@@ -23,12 +23,18 @@ GPIO.setup(led_pin, GPIO.OUT)
 
 # GPIO setup
 GPIO.setmode(GPIO.BCM)  # Use BCM GPIO numbering
-button_pin = 26
+button_pin = 23
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Pull-down resistor
 
 # Debounce variables
 button_state = False
 debounce_time = 0.2  # Debounce time in seconds
+
+# System States
+STATE_INITIAL = 0
+STATE_ARMED = 1
+STATE_RECORDING = 2
+STATE_TRANSFER = 3
 
 def blink_led(pin, num_blinks, blink_speed):
     for _ in range(num_blinks):
@@ -148,27 +154,34 @@ def send_email(video_filename):
 
 # Main function to control the flow of the program
 def main():
+    global current_state, button_state
     while True:
         if GPIO.input(button_pin) == GPIO.HIGH:
             if not button_state: # Check if the button state has changed
                 button_state = True
-                clk += 1
                 time.sleep(debounce_time) # Wait for debounce time
-        # Check for motion using the PIR sensor
-        if clk == 1:
-            blink_led(led_pin, 5, 0.5)
-            
+                if current_state == STATE_INITIAL:
+                    current_state = STATE_ARMED
+                    GPIO.output(led_pin, GPIO.HIGH) # Turn LED on when armed
+                elif current_state == STATE_ARMED:
+                    current_state = STATE_TRANSFER # Added state transition
+                    GPIO.output(led_pin, GPIO.LOW) # Turn LED off
+                elif current_state == STATE_TRANSFER:
+                    current_state = STATE_INITIAL # Added state transition
+                    GPIO.output(led_pin, GPIO.LOW)
+            else:
+                button_state = False
+
+        if current_state == STATE_ARMED:
             if GPIO.input(pir_pin) == GPIO.HIGH:
                 print("Motion detected!")
-
-                # Record video when motion is detected
-                video_filename = "motion_video.mp4" #changed to mp4 to avoid double conversion
+                current_state = STATE_RECORDING
+                video_filename = "motion_video.mp4"
                 record_video(video_filename)
-                
-                # Pause for 10 seconds before checking motion again
-                time.sleep(10)
-            else:
-                print("No motion detected.")
+                blink_led(led_pin, 10, 0.5) #Blink 10 times during recording
+                current_state = STATE_ARMED
+                GPIO.output(led_pin, GPIO.HIGH) #Turn LED back on after recording
+
 
         time.sleep(1)  # Check for motion every 1 second
 
