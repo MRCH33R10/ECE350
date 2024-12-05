@@ -63,9 +63,13 @@ def record_video(filename, duration=15):
 
     if not out.isOpened():
         print("Error: VideoWriter initialization failed.")
-        cap.release()
-        return
-
+    else:
+        print("VideoWriter initialized successfully.")
+        # Add a few frames for testing
+        for i in range(10):
+            out.write(cv2.imread('test_image.jpg')) #Replace with a test image, or create a blank one.
+        out.release()
+        
     print(f"Recording started for {duration} seconds.")
     start_time = time.time()  # Start time
     frame_count = 0
