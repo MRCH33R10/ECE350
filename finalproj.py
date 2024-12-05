@@ -135,14 +135,8 @@ def main():
             print("Motion detected!")
 
             # Record video when motion is detected
-            video_filename = "motion_video.mp4" #changed to mp4 to avoid double conversion
+            video_filename = "/media/nthomp8/B33F-EA9A/VideoLog/motion_video.mp4" #changed to mp4 to avoid double conversion
             record_video(video_filename)
-
-            # Send email with video attachment
-            try:
-                send_email(video_filename)
-            except Exception as e:
-                print(f"Error sending email: {e}")
             
             # Pause for 10 seconds before checking motion again
             time.sleep(10)
