@@ -36,7 +36,7 @@ try:
     print("Moving servo...")
     set_servo_angle(0)  # Go to 0 degrees
     sleep(10)
-    set_servo_angle(90) # Go to 90 degrees
+    set_servo_angle(45) # Go to 90 degrees
     sleep(10)
     set_servo_angle(0) # Go to 0 degrees
     sleep(1)
