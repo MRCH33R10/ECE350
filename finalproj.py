@@ -2,9 +2,9 @@ import time
 import RPi.GPIO as GPIO
 import cv2
 import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email import encoders
+# from email.mime.multipart import MIMEMultipart
+# from email.mime.base import MIMEBase
+# from email import encoders
 import subprocess
 import datetime
 import os
@@ -17,17 +17,15 @@ GPIO.setmode(GPIO.BCM)
 pir_pin = 4
 led_pinR = 24
 led_pinG = 23
-MotorPin = 22
+Motor_pinL = 22
 
-pwm = GPIO.PWM(MotorPin, 50)
-pwm.start(0) # Start the servo with 0 duty cycle ( at 0 deg position )
 
 clk = 0
 # Set PIR sensor pin as input
 GPIO.setup(pir_pin, GPIO.IN)
 GPIO.setup(led_pinR, GPIO.OUT)
 GPIO.setup(led_pinG, GPIO.OUT)
-GPIO.setup(MotorPin, GPIO.OUT)
+GPIO.setup(Motor_pinL, GPIO.OUT)
 # GPIO setup
 GPIO.setmode(GPIO.BCM)  # Use BCM GPIO numbering
 button_pin = 26
@@ -44,6 +42,10 @@ STATE_RECORDING = 2
 STATE_TRANSFER = 3
 
 current_state = STATE_INITIAL
+
+pwm = GPIO.PWM(Motor_pinL, 50)
+pwm.start(0) # Start the servo with 0 duty cycle ( at 0 deg position )
+
 
 def eject_device(device_path):
     """Ejects a device using the 'sudo eject' command.  Requires root privileges."""
