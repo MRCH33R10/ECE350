@@ -8,6 +8,7 @@ from email import encoders
 import subprocess
 import datetime
 import os
+import shutil
 
 # Set GPIO mode to BCM (Broadcom GPIO pin numbering)
 GPIO.setmode(GPIO.BCM)
@@ -61,7 +62,7 @@ def record_video(filename, duration=15):
     cap.set(cv2.CAP_PROP_FPS, 10)  # Reduce frame rate to 10 FPS to avoid overloading
 
     # Generate a timestamped filename
-    filename = datetime.datetime.now().strftime("/media/nthomp8/B33F-EA9A/VideoLog/%Y-%m-%d_%H-%M-%S.avi")
+    filename = datetime.datetime.now().strftime("VideoLog/%Y-%m-%d_%H-%M-%S.avi")
     # print(f"Recording video to file: {filename}")
 
     # Set codec for video output (MJPEG codec for AVI file)
@@ -77,28 +78,27 @@ def record_video(filename, duration=15):
     start_time = time.time()  # Start time
     frame_count = 0
 
-    # try:
-    #     while time.time() - start_time < duration:
-    #         ret, frame = cap.read()
-    #         if ret:
-    #             out.write(frame)
-    #             frame_count += 1
-    #             # Removed cv2.imshow - no need to display live feed
-    #         else:
-    #             print("Error: Unable to read frame.")
-    #             break
-    # except Exception as e:
-    #     print(f"Exception during video recording: {e}")
-    # finally:
-    #     cap.release()
-    #     out.release()
-    #     cv2.destroyAllWindows()
-    #     elapsed_time = time.time() - start_time
-    #     print(f"Recording stopped after {elapsed_time:.2f} seconds. Total frames captured: {frame_count}")
+    try:
+        while time.time() - start_time < duration:
+            ret, frame = cap.read()
+            if ret:
+                out.write(frame)
+                frame_count += 1
+            else:
+                print("Error: Unable to read frame.")
+                break
+    except Exception as e:
+        print(f"Exception during video recording: {e}")
+    finally:
+        cap.release()
+        out.release()
+        cv2.destroyAllWindows()
+        elapsed_time = time.time() - start_time
+        print(f"Recording stopped after {elapsed_time:.2f} seconds. Total frames captured: {frame_count}")
 
-    #     # Convert the recorded video to .mp4 format using ffmpeg
-    #     mp4_filename = filename.replace('.avi', '.mp4')
-    #     convert_video_to_mp4(filename, mp4_filename)
+        # Convert the recorded video to .mp4 format using ffmpeg
+        mp4_filename = filename.replace('.avi', '.mp4')
+        convert_video_to_mp4(filename, mp4_filename)
 
 # Function to convert AVI video to MP4 using ffmpeg
 def convert_video_to_mp4(input_filename, output_filename):
@@ -155,10 +155,32 @@ def send_email(video_filename):
     finally:
         server.quit()
 
+def transfer_and_clear_video_folder(usb_path):
+    onboard_path = "/home/pi/VideoLog"
+    try:
+        if not os.path.exists(usb_path):
+            os.makedirs(usb_path)
+        
+        # Find the next available folder number
+        i = 1
+        while os.path.exists(os.path.join(usb_path, f"VideoLog_{i}")):
+            i += 1
+        
+        target_path = os.path.join(usb_path, f"VideoLog_{i}")
+        shutil.copytree(onboard_path, target_path)
+        shutil.rmtree(onboard_path) # clear the folder
+        print(f"Video files transferred to: {target_path}")
 
+    except OSError as e:
+        print(f"Error transferring or clearing video folder: {e}")
+    except Exception as e:
+        print(f"An unexpected error occured: {e}")
+        
 # Main function to control the flow of the program
 def main():
     global current_state, button_state
+    usb_path = "/media/nthomp8/B33F-EA9A/"
+
     while True:
         if GPIO.input(button_pin) == GPIO.HIGH:
             if not button_state: # Check if the button state has changed
@@ -166,14 +188,15 @@ def main():
                 time.sleep(debounce_time) # Wait for debounce time
                 if current_state == STATE_INITIAL:
                     current_state = STATE_ARMED
-                    time.sleep(10)
                     GPIO.output(led_pinR, GPIO.HIGH) # Turn LED on when armed
+                    time.sleep(10)
                 elif current_state == STATE_ARMED:
                     current_state = STATE_TRANSFER # Added state transition
                     GPIO.output(led_pinR, GPIO.LOW) # Turn LED off
                 elif current_state == STATE_TRANSFER:
                     current_state = STATE_INITIAL # Added state transition
                     GPIO.output(led_pinR, GPIO.LOW)
+                    GPIO.output(led_pinG, GPIO.LOW)
             else:
                 button_state = False
 
@@ -188,6 +211,10 @@ def main():
                 GPIO.output(led_pinG, GPIO.HIGH)
             else:
                 GPIO.output(led_pinR, GPIO.HIGH) #Turn LED back on after recording
+        elif current_state == STATE_TRANSFER:
+            blink_led(led_pinG, 10, 0.5)
+            transfer_and_clear_video_folder(usb_path)
+            current_state = STATE_INITIAL 
         time.sleep(1)  # Check for motion every 1 second
 
 # Run the program
