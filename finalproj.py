@@ -44,7 +44,7 @@ STATE_TRANSFER = 3
 current_state = STATE_INITIAL
 
 pwm = GPIO.PWM(Motor_pinL, 50)
-pwm.start(0) # Start the servo with 0 duty cycle ( at 0 deg position )
+pwm.start(7.5) # Start the servo with 0 duty cycle ( at 0 deg position )
 
 
 def eject_device(device_path):
@@ -115,6 +115,15 @@ def record_video(filename, duration=30):
         # Convert the recorded video to .mp4 format using ffmpeg
         mp4_filename = filename.replace('.avi', '.mp4')
         convert_video_to_mp4(filename, mp4_filename)
+
+def smooth_servo_move(target_duty_cycle, steps=10, delay=0.05):  # Added smooth movement function
+    current_duty_cycle = pwm.duty_cycle
+    step_size = (target_duty_cycle - current_duty_cycle) / steps
+
+    for _ in range(steps):
+        current_duty_cycle += step_size
+        pwm.ChangeDutyCycle(current_duty_cycle)
+        time.sleep(delay)
 
 # Function to convert AVI video to MP4 using ffmpeg
 def convert_video_to_mp4(input_filename, output_filename):
@@ -227,11 +236,11 @@ def main():
                 time.sleep(3)
                 print("Motion detected!")
                 current_state = STATE_RECORDING
-                pwm.ChangeDutyCycle(5) # Tells the servo to turn to the left ( -90 deg position )
+                smooth_servo_move(5, steps=10) # Tells the servo to turn to the left ( -90 deg position )
                 video_filename = "vid.mp4"
                 record_video(video_filename)
-                pwm.ChangeDutyCycle(7.5) # Tells the servo to turn to the neutral position ( at 0 deg position )
                 current_state = STATE_ARMED
+                smooth_servo_move(7.5, steps=10) # Tells the servo to turn to the neutral position ( at 0 deg position )
                 GPIO.output(led_pinG, GPIO.HIGH)
         elif current_state == STATE_TRANSFER:
             move_folder_contents('/home/nthomp8/Desktop/ECE350/VideoLog', '/media/nthomp8/B33F-EA9A/VideoLog')
