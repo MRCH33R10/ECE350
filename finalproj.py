@@ -48,7 +48,7 @@ def blink_led(pin, num_blinks, blink_speed):
         time.sleep(blink_speed)
 
 # Function to record video using OpenCV with USB camera
-def record_video(filename, duration=10):
+def record_video(filename, duration=15):
     cap = cv2.VideoCapture(0)  # Open the camera (index 0 typically corresponds to the first connected USB camera)
     
     if not cap.isOpened():
@@ -77,28 +77,28 @@ def record_video(filename, duration=10):
     start_time = time.time()  # Start time
     frame_count = 0
 
-    try:
-        while time.time() - start_time < duration:
-            ret, frame = cap.read()
-            if ret:
-                out.write(frame)
-                frame_count += 1
-                # Removed cv2.imshow - no need to display live feed
-            else:
-                print("Error: Unable to read frame.")
-                break
-    except Exception as e:
-        print(f"Exception during video recording: {e}")
-    finally:
-        cap.release()
-        out.release()
-        cv2.destroyAllWindows()
-        elapsed_time = time.time() - start_time
-        print(f"Recording stopped after {elapsed_time:.2f} seconds. Total frames captured: {frame_count}")
+    # try:
+    #     while time.time() - start_time < duration:
+    #         ret, frame = cap.read()
+    #         if ret:
+    #             out.write(frame)
+    #             frame_count += 1
+    #             # Removed cv2.imshow - no need to display live feed
+    #         else:
+    #             print("Error: Unable to read frame.")
+    #             break
+    # except Exception as e:
+    #     print(f"Exception during video recording: {e}")
+    # finally:
+    #     cap.release()
+    #     out.release()
+    #     cv2.destroyAllWindows()
+    #     elapsed_time = time.time() - start_time
+    #     print(f"Recording stopped after {elapsed_time:.2f} seconds. Total frames captured: {frame_count}")
 
-        # Convert the recorded video to .mp4 format using ffmpeg
-        mp4_filename = filename.replace('.avi', '.mp4')
-        convert_video_to_mp4(filename, mp4_filename)
+    #     # Convert the recorded video to .mp4 format using ffmpeg
+    #     mp4_filename = filename.replace('.avi', '.mp4')
+    #     convert_video_to_mp4(filename, mp4_filename)
 
 # Function to convert AVI video to MP4 using ffmpeg
 def convert_video_to_mp4(input_filename, output_filename):
@@ -166,6 +166,7 @@ def main():
                 time.sleep(debounce_time) # Wait for debounce time
                 if current_state == STATE_INITIAL:
                     current_state = STATE_ARMED
+                    time.sleep(10)
                     GPIO.output(led_pinR, GPIO.HIGH) # Turn LED on when armed
                 elif current_state == STATE_ARMED:
                     current_state = STATE_TRANSFER # Added state transition
@@ -180,7 +181,7 @@ def main():
             if GPIO.input(pir_pin) == GPIO.HIGH:
                 print("Motion detected!")
                 current_state = STATE_RECORDING
-                video_filename = "motion_video.mp4"
+                video_filename = ""
                 record_video(video_filename)
                 blink_led(led_pinR, 10, 0.5) #Blink 10 times during recording
                 current_state = STATE_ARMED
