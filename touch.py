@@ -3,7 +3,7 @@ import time
 
 # GPIO setup
 GPIO.setmode(GPIO.BCM)  # Use BCM GPIO numbering
-button_pin = 23
+button_pin = 26
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Pull-down resistor
 
 # Debounce variables
