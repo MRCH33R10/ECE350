@@ -193,6 +193,9 @@ def main():
             else:
                 GPIO.output(led_pinR, GPIO.HIGH) #Turn LED back on after recording
         elif current_state == STATE_TRANSFER:
+            current_state = STATE_INITIAL
+            GPIO.output(led_pinG, GPIO.LOW)
+
             
         time.sleep(1)  # Check for motion every 1 second
 
