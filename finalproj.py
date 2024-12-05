@@ -1,14 +1,15 @@
 import time
 import RPi.GPIO as GPIO
 import cv2
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email import encoders
-import subprocess
+import threading
 import datetime
 import os
 import shutil
+import subprocess
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 
 # Set GPIO mode to BCM (Broadcom GPIO pin numbering)
 GPIO.setmode(GPIO.BCM)
@@ -43,9 +44,9 @@ current_state = STATE_INITIAL
 
 def blink_led(pin, num_blinks, blink_speed):
     for _ in range(num_blinks):
-        GPIO.output(pin, GPIO.HIGH)  # Turn the LED on
+        GPIO.output(pin, GPIO.HIGH)
         time.sleep(blink_speed)
-        GPIO.output(pin, GPIO.LOW)  # Turn the LED off
+        GPIO.output(pin, GPIO.LOW)
         time.sleep(blink_speed)
 
 # Function to record video using OpenCV with USB camera
@@ -204,18 +205,26 @@ def main():
             if GPIO.input(pir_pin) == GPIO.HIGH:
                 print("Motion detected!")
                 current_state = STATE_RECORDING
-                video_filename = ""
+                video_filename = datetime.datetime.now().strftime("VideoLog/%Y-%m-%d_%H-%M-%S.avi")  # Generate filename here
+
+                # Start blinking in a separate thread
+                blink_thread = threading.Thread(target=blink_led, args=(led_pinR, 10, 0.5))
+                blink_thread.daemon = True  # Allow main thread to exit even if blink_thread is running
+                blink_thread.start()
+
                 record_video(video_filename)
-                blink_led(led_pinR, 10, 0.5) #Blink 10 times during recording
                 current_state = STATE_ARMED
-                GPIO.output(led_pinG, GPIO.HIGH)
+                GPIO.output(led_pinG, GPIO.HIGH) # Indicate recording complete
             else:
-                GPIO.output(led_pinR, GPIO.HIGH) #Turn LED back on after recording
+                GPIO.output(led_pinR, GPIO.HIGH)
         elif current_state == STATE_TRANSFER:
-            blink_led(led_pinG, 10, 0.5)
+            #Start blinking in a separate thread
+            blink_thread = threading.Thread(target=blink_led, args=(led_pinG, 10, 0.5))
+            blink_thread.daemon = True
+            blink_thread.start()
             transfer_and_clear_video_folder(usb_path)
-            current_state = STATE_INITIAL 
-        time.sleep(1)  # Check for motion every 1 second
+            current_state = STATE_INITIAL
+        time.sleep(1)
 
 # Run the program
 if __name__ == "__main__":
