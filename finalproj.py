@@ -18,17 +18,15 @@ pir_pin = 4
 led_pinR = 24
 led_pinG = 23
 Motor_pinL = 22
+button_pin = 26
 
-
-clk = 0
+clk = 0# GPIO setup
 # Set PIR sensor pin as input
 GPIO.setup(pir_pin, GPIO.IN)
 GPIO.setup(led_pinR, GPIO.OUT)
 GPIO.setup(led_pinG, GPIO.OUT)
 GPIO.setup(Motor_pinL, GPIO.OUT)
-# GPIO setup
-GPIO.setmode(GPIO.BCM)  # Use BCM GPIO numbering
-button_pin = 26
+
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Pull-down resistor
 
 # Debounce variables
@@ -44,7 +42,7 @@ STATE_TRANSFER = 3
 current_state = STATE_INITIAL
 
 pwm = GPIO.PWM(Motor_pinL, 50)
-pwm.start(7.5) # Start the servo with 0 duty cycle ( at 0 deg position )
+pwm.start(0) # Start the servo with 0 duty cycle ( at 0 deg position )
 
 
 def eject_device(device_path):
@@ -116,18 +114,6 @@ def record_video(filename, duration=30):
         mp4_filename = filename.replace('.avi', '.mp4')
         convert_video_to_mp4(filename, mp4_filename)
 
-def smooth_servo_move(target_duty_cycle, steps=10, delay=0.05):
-    global current_servo_duty_cycle #Access and modify the global variable
-
-    try:
-        step_size = (target_duty_cycle - current_servo_duty_cycle) / steps
-
-        for _ in range(steps):
-            current_servo_duty_cycle += step_size
-            pwm.ChangeDutyCycle(current_servo_duty_cycle)
-            time.sleep(delay)
-    except Exception as e:
-        print(f"Error in smooth_servo_move: {e}")
 
 # Function to convert AVI video to MP4 using ffmpeg
 def convert_video_to_mp4(input_filename, output_filename):
@@ -236,15 +222,22 @@ def main():
 
         if current_state == STATE_ARMED:
             print("Waiting")
+            pwm.ChangeDutyCycle(2.5)  # Roughly 0 degrees
             if GPIO.input(pir_pin) == GPIO.HIGH:
                 time.sleep(3)
                 print("Motion detected!")
                 current_state = STATE_RECORDING
-                smooth_servo_move(5, steps=10) # Tells the servo to turn to the left ( -90 deg position )
+                for i in range(0, 91, 9): #Increment by 9 degrees
+                    duty_cycle = 2.5 + (10.0 / 180.0) * i #Scale duty cycle for 0-90 degrees
+                    pwm.ChangeDutyCycle(duty_cycle)
+                    time.sleep(0.1)
                 video_filename = "vid.mp4"
                 record_video(video_filename)
                 current_state = STATE_ARMED
-                smooth_servo_move(7.5, steps=10) # Tells the servo to turn to the neutral position ( at 0 deg position )
+                for i in range(90, -1, -9): # Decrement by 9 degrees
+                    duty_cycle = 2.5 + (10.0 / 180.0) * i
+                    pwm.ChangeDutyCycle(duty_cycle)
+                    time.sleep(0.1)
                 GPIO.output(led_pinG, GPIO.HIGH)
         elif current_state == STATE_TRANSFER:
             move_folder_contents('/home/nthomp8/Desktop/ECE350/VideoLog', '/media/nthomp8/B33F-EA9A/VideoLog')
