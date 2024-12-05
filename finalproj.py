@@ -59,7 +59,7 @@ def record_video(filename, duration=10):
     
     if not cap.isOpened():
         print("Error: Could not access the camera.")
-        return
+        return False
 
     # Set video parameters: lower frame rate (10 fps) and resolution (640x480)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -99,16 +99,18 @@ def record_video(filename, duration=10):
                 break
     except Exception as e:
         print(f"Exception during video recording: {e}")
+        return False
     finally:
         cap.release()
         out.release()
         cv2.destroyAllWindows()
         elapsed_time = time.time() - start_time
         print(f"Recording stopped after {elapsed_time:.2f} seconds. Total frames captured: {frame_count}")
-
+        return True  # Indicate success
+        
         # Convert the recorded video to .mp4 format using ffmpeg
-        mp4_filename = filename.replace('.avi', '.mp4')
-        convert_video_to_mp4(filename, mp4_filename)
+    mp4_filename = filename.replace('.avi', '.mp4')
+    convert_video_to_mp4(filename, mp4_filename)
 
 # Function to convert AVI video to MP4 using ffmpeg
 def convert_video_to_mp4(input_filename, output_filename):
@@ -159,36 +161,36 @@ def send_email(video_filename):
     # Use the generated App Password instead of your regular password
     app_password = "YOUR_APP_PASSWORD"  # Replace with your App Password
 
-    # Create the email message
-    msg = MIMEMultipart()
-    msg['From'] = fromaddr
-    msg['To'] = toaddr
-    msg['Subject'] = "Motion Detected: Video Attached"
+    # # Create the email message
+    # msg = MIMEMultipart()
+    # msg['From'] = fromaddr
+    # msg['To'] = toaddr
+    # msg['Subject'] = "Motion Detected: Video Attached"
     
-    # Attach the video file
-    try:
-        with open(video_filename, "rb") as f:
-            part = MIMEBase('application', 'octet-stream')
-            part.set_payload(f.read())
-        encoders.encode_base64(part)
-        part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(video_filename)}')
-        msg.attach(part)
-    except FileNotFoundError:
-        print(f"Error: The file {video_filename} was not found.")
-        return
+    # # Attach the video file
+    # try:
+    #     with open(video_filename, "rb") as f:
+    #         part = MIMEBase('application', 'octet-stream')
+    #         part.set_payload(f.read())
+    #     encoders.encode_base64(part)
+    #     part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(video_filename)}')
+    #     msg.attach(part)
+    # except FileNotFoundError:
+    #     print(f"Error: The file {video_filename} was not found.")
+    #     return
 
-    # Connect to SMTP server and send email
-    try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)  # Gmail SMTP server
-        server.starttls()
-        server.login(fromaddr, app_password)
-        text = msg.as_string()
-        server.sendmail(fromaddr, toaddr, text)
-        print("Email sent successfully.")
-    except Exception as e:
-        print(f"Failed to send email: {e}")
-    finally:
-        server.quit()
+    # # Connect to SMTP server and send email
+    # try:
+    #     server = smtplib.SMTP('smtp.gmail.com', 587)  # Gmail SMTP server
+    #     server.starttls()
+    #     server.login(fromaddr, app_password)
+    #     text = msg.as_string()
+    #     server.sendmail(fromaddr, toaddr, text)
+    #     print("Email sent successfully.")
+    # except Exception as e:
+    #     print(f"Failed to send email: {e}")
+    # finally:
+    #     server.quit()
 
 
 # Main function to control the flow of the program
