@@ -1,24 +1,53 @@
-# We imports the GPIO module
 import RPi.GPIO as GPIO
-# We import the command sleep from time
 from time import sleep
 
-# Stops all warnings from appearing
+# Use BCM GPIO numbering (recommended for clarity)
+GPIO.setmode(GPIO.BCM)  # Changed to BCM
 GPIO.setwarnings(False)
 
-# We name all the pins on BOARD mode
-GPIO.setmode(GPIO.BOARD)
-# Set an output for the PWM Signal
-GPIO.setup(15, GPIO.OUT)
+# Define the GPIO pin connected to the servo (adjust if needed)
+servo_pin = 18  # Example: Change to the actual GPIO pin connected to your servo
 
-# Set up the PWM on pin #16 at 50Hz
-pwm = GPIO.PWM(15, 50)
-pwm.start(0) # Start the servo with 0 duty cycle ( at 0 deg position )
-pwm.ChangeDutyCycle(5) # Tells the servo to turn to the left ( -90 deg position )
-sleep(0.5) # Tells the servo to Delay for 5sec
-pwm.ChangeDutyCycle(7.5) # Tells the servo to turn to the neutral position ( at 0 deg position )
-sleep(0.5) # Tells the servo to Delay for 5sec
-pwm.ChangeDutyCycle(10) # Tells the servo to turn to the right ( +90 deg position )
-sleep(0.5) # Tells the servo to Delay for 5sec
-pwm.stop(0) # Stop the servo with 0 duty cycle ( at 0 deg position )
-GPIO.cleanup() # Clean up all the ports we've used.
+# Set up the GPIO pin as output
+GPIO.setup(servo_pin, GPIO.OUT)
+
+# Create a PWM instance (50Hz)
+pwm = GPIO.PWM(servo_pin, 50)
+pwm.start(0)
+
+# Function to control the servo angle (degrees)
+def set_servo_angle(angle):
+    """Sets the servo angle. Angle should be between 0 and 180 degrees."""
+    if not 0 <= angle <= 180:
+        raise ValueError("Angle must be between 0 and 180 degrees.")
+
+    # Calculate duty cycle (adjust these values based on your servo's specifics)
+    duty_cycle = (angle / 180.0) + 0.05 # Calibration may be needed here
+
+    # Map duty cycle to pulse width (approximately)
+    pulse_width = duty_cycle * 20 # 20ms period
+
+    # Set the duty cycle (0 to 100%)
+    pwm.ChangeDutyCycle(pulse_width)
+    sleep(0.1)
+
+try:
+    # Example usage:
+    print("Moving servo...")
+    set_servo_angle(0)  # Go to 0 degrees
+    sleep(1)
+    set_servo_angle(90) # Go to 90 degrees
+    sleep(1)
+    set_servo_angle(180) # Go to 180 degrees
+    sleep(1)
+    set_servo_angle(90) # Go to 90 degrees
+    sleep(1)
+    set_servo_angle(0) # Go to 0 degrees
+    sleep(1)
+
+except KeyboardInterrupt:
+    print("Servo control stopped.")
+
+finally:
+    pwm.stop()
+    GPIO.cleanup()
