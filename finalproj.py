@@ -160,6 +160,7 @@ def main():
                 if current_state == STATE_INITIAL:
                     current_state = STATE_ARMED
                     GPIO.output(led_pinR, GPIO.HIGH)
+                    print("Arming")
                     time.sleep(10)
                     print("Armed")
                     GPIO.output(led_pinR, GPIO.HIGH) # Turn LED on when armed
