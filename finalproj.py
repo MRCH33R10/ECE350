@@ -213,8 +213,8 @@ def main():
                 current_state = STATE_ARMED
                 GPIO.output(led_pinG, GPIO.HIGH)
         elif current_state == STATE_TRANSFER:
-            move_folder_contents('/home/nthomp8/Desktop/ECE350/VideoLog/VideoLog', '/media/nthomp8/B33F-EA9A/VideoLog')
-            clear_folder('/home/nthomp8/Desktop/ECE350/VideoLog/VideoLog')
+            move_folder_contents('/home/nthomp8/Desktop/ECE350/VideoLog', '/media/nthomp8/B33F-EA9A/VideoLog')
+            clear_folder('/home/nthomp8/Desktop/ECE350/VideoLog')
             current_state = STATE_INITIAL
             GPIO.output(led_pinG, GPIO.LOW)
 
