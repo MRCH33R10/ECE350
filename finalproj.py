@@ -249,7 +249,7 @@ def main():
                 time.sleep(3)
                 print("Motion detected!")
                 current_state = STATE_RECORDING
-                set_servo_angle(90) # Go to 90 degrees
+                set_servo_angle(45) # Go to 90 degrees
                 video_filename = "vid.mp4"
                 record_video(video_filename)
                 current_state = STATE_ARMED
