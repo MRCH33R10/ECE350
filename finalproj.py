@@ -40,13 +40,6 @@ STATE_TRANSFER = 3
 
 current_state = STATE_INITIAL
 
-def blink_led(pin, num_blinks, blink_speed):
-    for _ in range(num_blinks):
-        GPIO.output(pin, GPIO.HIGH)  # Turn the LED on
-        time.sleep(blink_speed)
-        GPIO.output(pin, GPIO.LOW)  # Turn the LED off
-        time.sleep(blink_speed)
-
 # Function to record video using OpenCV with USB camera
 def record_video(filename, duration=15):
     cap = cv2.VideoCapture(0)  # Open the camera (index 0 typically corresponds to the first connected USB camera)
@@ -59,9 +52,9 @@ def record_video(filename, duration=15):
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     cap.set(cv2.CAP_PROP_FPS, 10)  # Reduce frame rate to 10 FPS to avoid overloading
-
+#/media/nthomp8/B33F-EA9A/
     # Generate a timestamped filename
-    filename = datetime.datetime.now().strftime("/media/nthomp8/B33F-EA9A/VideoLog/%Y-%m-%d_%H-%M-%S.avi")
+    filename = datetime.datetime.now().strftime("VideoLog/%Y-%m-%d_%H-%M-%S.avi")
     # print(f"Recording video to file: {filename}")
 
     # Set codec for video output (MJPEG codec for AVI file)
@@ -172,11 +165,10 @@ def main():
                     GPIO.output(led_pinR, GPIO.HIGH) # Turn LED on when armed
                 elif current_state == STATE_ARMED:
                     current_state = STATE_TRANSFER # Added state transition
-                    GPIO.output(led_pinG, GPIO.HIGH)
                     GPIO.output(led_pinR, GPIO.LOW) # Turn LED off
                 elif current_state == STATE_TRANSFER:
                     current_state = STATE_INITIAL # Added state transition
-                    GPIO.output(led_pinR, GPIO.LOW)
+                    GPIO.output(led_pinG, GPIO.LOW)
             else:
                 button_state = False
 
@@ -187,11 +179,8 @@ def main():
                 current_state = STATE_RECORDING
                 video_filename = "vid.mp4"
                 record_video(video_filename)
-                blink_led(led_pinR, 3, 0.5) #Blink 10 times during recording
                 current_state = STATE_ARMED
                 GPIO.output(led_pinG, GPIO.HIGH)
-            else:
-                GPIO.output(led_pinR, GPIO.HIGH) #Turn LED back on after recording
         elif current_state == STATE_TRANSFER:
             current_state = STATE_INITIAL
             GPIO.output(led_pinG, GPIO.LOW)
