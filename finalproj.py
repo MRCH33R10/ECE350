@@ -116,14 +116,17 @@ def record_video(filename, duration=30):
         mp4_filename = filename.replace('.avi', '.mp4')
         convert_video_to_mp4(filename, mp4_filename)
 
-def smooth_servo_move(target_duty_cycle, steps=10, delay=0.05):  # Added smooth movement function
-    current_duty_cycle = pwm.duty_cycle
-    step_size = (target_duty_cycle - current_duty_cycle) / steps
+def smooth_servo_move(target_duty_cycle, steps=10, delay=0.05):
+    try:
+        current_duty_cycle = pwm.duty_cycle #Corrected
+        step_size = (target_duty_cycle - current_duty_cycle) / steps
 
-    for _ in range(steps):
-        current_duty_cycle += step_size
-        pwm.ChangeDutyCycle(current_duty_cycle)
-        time.sleep(delay)
+        for _ in range(steps):
+            current_duty_cycle += step_size
+            pwm.ChangeDutyCycle(current_duty_cycle)
+            time.sleep(delay)
+    except Exception as e:
+        print(f"Error in smooth_servo_move: {e}")
 
 # Function to convert AVI video to MP4 using ffmpeg
 def convert_video_to_mp4(input_filename, output_filename):
