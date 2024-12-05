@@ -8,6 +8,7 @@ from email import encoders
 import subprocess
 import datetime
 import os
+import shutil
 
 # Set GPIO mode to BCM (Broadcom GPIO pin numbering)
 GPIO.setmode(GPIO.BCM)
@@ -41,7 +42,7 @@ STATE_TRANSFER = 3
 current_state = STATE_INITIAL
 
 # Function to record video using OpenCV with USB camera
-def record_video(filename, duration=15):
+def record_video(filename, duration=10):
     cap = cv2.VideoCapture(0)  # Open the camera (index 0 typically corresponds to the first connected USB camera)
     
     if not cap.isOpened():
@@ -52,7 +53,7 @@ def record_video(filename, duration=15):
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     cap.set(cv2.CAP_PROP_FPS, 10)  # Reduce frame rate to 10 FPS to avoid overloading
-#/media/nthomp8/B33F-EA9A/
+
     # Generate a timestamped filename
     filename = datetime.datetime.now().strftime("VideoLog/%Y-%m-%d_%H-%M-%S.avi")
     # print(f"Recording video to file: {filename}")
@@ -69,7 +70,7 @@ def record_video(filename, duration=15):
         for i in range(10):
             out.write(cv2.imread('test_image.jpg')) #Replace with a test image, or create a blank one.
         out.release()
-        
+
     print(f"Recording started for {duration} seconds.")
     start_time = time.time()  # Start time
     frame_count = 0
@@ -111,6 +112,31 @@ def convert_video_to_mp4(input_filename, output_filename):
     except Exception as e:
         print(f"An unexpected error occurred during conversion: {e}")
 
+def clear_folder(folder_path):
+    """Clears the contents of a folder recursively.  USE WITH CAUTION!"""
+    try:
+        shutil.rmtree(folder_path)
+        os.makedirs(folder_path) # recreate the empty folder
+        print(f"Folder '{folder_path}' and its contents have been deleted.")
+    except FileNotFoundError:
+        print(f"Folder '{folder_path}' not found.")
+    except OSError as e:
+        print(f"Error clearing folder '{folder_path}': {e}")
+
+def move_folder_contents(source_folder, destination_folder):
+    """Moves all files and subfolders from source to destination."""
+    try:
+        for item in os.listdir(source_folder):
+            source_path = os.path.join(source_folder, item)
+            destination_path = os.path.join(destination_folder, item)
+            shutil.move(source_path, destination_path)
+        print(f"Contents of '{source_folder}' moved to '{destination_folder}'.")
+    except FileNotFoundError:
+        print(f"Source folder '{source_folder}' or destination folder '{destination_folder}' not found.")
+    except shutil.Error as e:
+        print(f"Error moving files: {e}")
+    except OSError as e:
+        print(f"An OS error occurred: {e}")
 
 # Function to send email with video attachment
 def send_email(video_filename):
@@ -187,6 +213,8 @@ def main():
                 current_state = STATE_ARMED
                 GPIO.output(led_pinG, GPIO.HIGH)
         elif current_state == STATE_TRANSFER:
+            move_folder_contents('/home/nthomp8/Desktop/ECE350/VideoLog/VideoLog', '/media/nthomp8/B33F-EA9A/VideoLog')
+            clear_folder('/home/nthomp8/Desktop/ECE350/VideoLog/VideoLog')
             current_state = STATE_INITIAL
             GPIO.output(led_pinG, GPIO.LOW)
 
