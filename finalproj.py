@@ -17,6 +17,10 @@ GPIO.setmode(GPIO.BCM)
 pir_pin = 4
 led_pinR = 24
 led_pinG = 23
+MotorPin = 22
+
+pwm = GPIO.PWM(MotorPin, 50)
+pwm.start(0) # Start the servo with 0 duty cycle ( at 0 deg position )
 
 clk = 0
 # Set PIR sensor pin as input
@@ -221,13 +225,15 @@ def main():
                 time.sleep(3)
                 print("Motion detected!")
                 current_state = STATE_RECORDING
+                pwm.ChangeDutyCycle(5) # Tells the servo to turn to the left ( -90 deg position )
                 video_filename = "vid.mp4"
                 record_video(video_filename)
+                pwm.ChangeDutyCycle(7.5) # Tells the servo to turn to the neutral position ( at 0 deg position )
                 current_state = STATE_ARMED
                 GPIO.output(led_pinG, GPIO.HIGH)
         elif current_state == STATE_TRANSFER:
             move_folder_contents('/home/nthomp8/Desktop/ECE350/VideoLog', '/media/nthomp8/B33F-EA9A/VideoLog')
-            # clear_folder('/home/nthomp8/Desktop/ECE350/VideoLog')
+            clear_folder('/home/nthomp8/Desktop/ECE350/VideoLog')
             eject_device("/dev/sda1")
             current_state = STATE_INITIAL
             GPIO.output(led_pinG, GPIO.LOW)
