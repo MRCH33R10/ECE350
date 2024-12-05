@@ -14,7 +14,7 @@ GPIO.setmode(GPIO.BCM)
 
 # PIR motion sensor pin
 pir_pin = 4
-led_pin = 23
+led_pin = 24
 
 clk = 0
 # Set PIR sensor pin as input
@@ -23,7 +23,7 @@ GPIO.setup(led_pin, GPIO.OUT)
 
 # GPIO setup
 GPIO.setmode(GPIO.BCM)  # Use BCM GPIO numbering
-button_pin = 26
+button_pin = 23
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Pull-down resistor
 
 # Debounce variables
