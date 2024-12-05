@@ -14,7 +14,7 @@ GPIO.setmode(GPIO.BCM)
 
 # PIR motion sensor pin
 pir_pin = 4
-led_pin = 14
+led_pin = 23
 
 clk = 0
 # Set PIR sensor pin as input
