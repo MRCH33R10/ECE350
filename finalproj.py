@@ -44,7 +44,7 @@ current_state = STATE_INITIAL
 
 pwm = GPIO.PWM(Motor_pinL, 50)
 pwm.start(7.5) # Start the servo with 0 duty cycle ( at 0 deg position )
-
+current_servo_duty_cycle = 7.5
 
 def eject_device(device_path):
     """Ejects a device using the 'sudo eject' command.  Requires root privileges."""
@@ -116,7 +116,7 @@ def record_video(filename, duration=30):
         convert_video_to_mp4(filename, mp4_filename)
 
 def smooth_servo_move(target_duty_cycle, steps=10, delay=0.05):
-    global current_servo_duty_cycle #Access and modify the global variable
+    global current_servo_duty_cycle  #Access and modify the global variable
 
     try:
         step_size = (target_duty_cycle - current_servo_duty_cycle) / steps
@@ -211,7 +211,7 @@ def send_email(video_filename):
 
 # Main function to control the flow of the program
 def main():
-    global current_state, button_state
+    global current_state, button_state, current_servo_duty_cycle
     while True:
         if GPIO.input(button_pin) == GPIO.HIGH:
             if not button_state: # Check if the button state has changed
