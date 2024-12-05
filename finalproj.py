@@ -14,12 +14,14 @@ GPIO.setmode(GPIO.BCM)
 
 # PIR motion sensor pin
 pir_pin = 4
-led_pin = 24
+led_pinR = 24
+led_pinG = 23
 
 clk = 0
 # Set PIR sensor pin as input
 GPIO.setup(pir_pin, GPIO.IN)
-GPIO.setup(led_pin, GPIO.OUT)
+GPIO.setup(led_pinR, GPIO.OUT)
+GPIO.setup(led_pinG, GPIO.OUT)
 
 # GPIO setup
 GPIO.setmode(GPIO.BCM)  # Use BCM GPIO numbering
@@ -164,13 +166,13 @@ def main():
                 time.sleep(debounce_time) # Wait for debounce time
                 if current_state == STATE_INITIAL:
                     current_state = STATE_ARMED
-                    GPIO.output(led_pin, GPIO.HIGH) # Turn LED on when armed
+                    GPIO.output(led_pinR, GPIO.HIGH) # Turn LED on when armed
                 elif current_state == STATE_ARMED:
                     current_state = STATE_TRANSFER # Added state transition
-                    GPIO.output(led_pin, GPIO.LOW) # Turn LED off
+                    GPIO.output(led_pinR, GPIO.LOW) # Turn LED off
                 elif current_state == STATE_TRANSFER:
                     current_state = STATE_INITIAL # Added state transition
-                    GPIO.output(led_pin, GPIO.LOW)
+                    GPIO.output(led_pinR, GPIO.LOW)
             else:
                 button_state = False
 
@@ -180,11 +182,11 @@ def main():
                 current_state = STATE_RECORDING
                 video_filename = "motion_video.mp4"
                 record_video(video_filename)
-                blink_led(led_pin, 10, 0.5) #Blink 10 times during recording
+                blink_led(led_pinR, 10, 0.5) #Blink 10 times during recording
                 current_state = STATE_ARMED
-                GPIO.output(led_pin, GPIO.HIGH) #Turn LED back on after recording
-
-
+                GPIO.output(led_pinG, GPIO.HIGH)
+            else:
+                GPIO.output(led_pinR, GPIO.HIGH) #Turn LED back on after recording
         time.sleep(1)  # Check for motion every 1 second
 
 # Run the program
