@@ -166,10 +166,13 @@ def main():
                 time.sleep(debounce_time) # Wait for debounce time
                 if current_state == STATE_INITIAL:
                     current_state = STATE_ARMED
+                    GPIO.output(led_pinR, GPIO.HIGH)
                     time.sleep(10)
+                    print("Armed")
                     GPIO.output(led_pinR, GPIO.HIGH) # Turn LED on when armed
                 elif current_state == STATE_ARMED:
                     current_state = STATE_TRANSFER # Added state transition
+                    GPIO.output(led_pinG, GPIO.HIGH)
                     GPIO.output(led_pinR, GPIO.LOW) # Turn LED off
                 elif current_state == STATE_TRANSFER:
                     current_state = STATE_INITIAL # Added state transition
@@ -178,16 +181,19 @@ def main():
                 button_state = False
 
         if current_state == STATE_ARMED:
+            print("Waiting")
             if GPIO.input(pir_pin) == GPIO.HIGH:
                 print("Motion detected!")
                 current_state = STATE_RECORDING
-                video_filename = "motion_video.mp4"
+                video_filename = "vid.mp4"
                 record_video(video_filename)
-                blink_led(led_pinR, 10, 0.5) #Blink 10 times during recording
+                blink_led(led_pinR, 3, 0.5) #Blink 10 times during recording
                 current_state = STATE_ARMED
                 GPIO.output(led_pinG, GPIO.HIGH)
             else:
                 GPIO.output(led_pinR, GPIO.HIGH) #Turn LED back on after recording
+        elif current_state == STATE_TRANSFER:
+            
         time.sleep(1)  # Check for motion every 1 second
 
 # Run the program
