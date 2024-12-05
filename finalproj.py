@@ -41,6 +41,32 @@ STATE_TRANSFER = 3
 
 current_state = STATE_INITIAL
 
+def eject_usb(device_path):
+    """Ejects a USB drive using udisksctl.  Requires root privileges."""
+    try:
+        #Use sudo for root privileges
+        subprocess.run(['sudo', 'udisksctl', 'power-off', device_path], check=True, capture_output=True, text=True)
+        print(f"USB drive '{device_path}' ejected successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error ejecting USB drive '{device_path}': {e.stderr}")
+    except FileNotFoundError:
+        print("Error: udisksctl command not found. Make sure udisks2 is installed.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+def find_usb_device_path(usb_mount_point):
+    """Find the device path of a mounted USB drive. This part is OS-specific"""
+    try:
+        output = subprocess.run(['findmnt', '-o', 'SOURCE', usb_mount_point], capture_output=True, text=True, check=True).stdout
+        device_path = output.strip()
+        return device_path
+    except subprocess.CalledProcessError as e:
+        print(f"Error finding device path: {e.stderr}")
+        return None
+    except Exception as e:
+        print(f"An unexpected error occured: {e}")
+        return None
+
 # Function to record video using OpenCV with USB camera
 def record_video(filename, duration=10):
     cap = cv2.VideoCapture(0)  # Open the camera (index 0 typically corresponds to the first connected USB camera)
@@ -215,6 +241,10 @@ def main():
         elif current_state == STATE_TRANSFER:
             move_folder_contents('/home/nthomp8/Desktop/ECE350/VideoLog', '/media/nthomp8/B33F-EA9A/VideoLog')
             clear_folder('/home/nthomp8/Desktop/ECE350/VideoLog')
+            usb_mount_point = "/media/nthomp8/B33F-EA9A"  # Replace with your USB mount point
+            device_path = find_usb_device_path(usb_mount_point)
+            if device_path:
+                eject_usb(device_path)
             current_state = STATE_INITIAL
             GPIO.output(led_pinG, GPIO.LOW)
 
