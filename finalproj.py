@@ -36,6 +36,8 @@ STATE_ARMED = 1
 STATE_RECORDING = 2
 STATE_TRANSFER = 3
 
+current_state = STATE_INITIAL
+
 def blink_led(pin, num_blinks, blink_speed):
     for _ in range(num_blinks):
         GPIO.output(pin, GPIO.HIGH)  # Turn the LED on
