@@ -27,7 +27,7 @@ clk = 0
 GPIO.setup(pir_pin, GPIO.IN)
 GPIO.setup(led_pinR, GPIO.OUT)
 GPIO.setup(led_pinG, GPIO.OUT)
-
+GPIO.setup(MotorPin, GPIO.OUT)
 # GPIO setup
 GPIO.setmode(GPIO.BCM)  # Use BCM GPIO numbering
 button_pin = 26
