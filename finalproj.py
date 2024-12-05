@@ -53,13 +53,12 @@ def eject_device(device_path):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-# Function to record video using OpenCV with USB camera
-def record_video(filename, duration=10):
+def record_video(filename, duration=30):
     cap = cv2.VideoCapture(0)  # Open the camera (index 0 typically corresponds to the first connected USB camera)
     
     if not cap.isOpened():
         print("Error: Could not access the camera.")
-        return False
+        return
 
     # Set video parameters: lower frame rate (10 fps) and resolution (640x480)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -68,7 +67,7 @@ def record_video(filename, duration=10):
 
     # Generate a timestamped filename
     filename = datetime.datetime.now().strftime("VideoLog/%Y-%m-%d_%H-%M-%S.avi")
-    # print(f"Recording video to file: {filename}")
+    print(f"Recording video to file: {filename}")
 
     # Set codec for video output (MJPEG codec for AVI file)
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')  # 'MJPG' codec
@@ -76,12 +75,8 @@ def record_video(filename, duration=10):
 
     if not out.isOpened():
         print("Error: VideoWriter initialization failed.")
-    else:
-        print("VideoWriter initialized successfully.")
-        # Add a few frames for testing
-        for i in range(10):
-            out.write(cv2.imread('test_image.jpg')) #Replace with a test image, or create a blank one.
-        out.release()
+        cap.release()
+        return
 
     print(f"Recording started for {duration} seconds.")
     start_time = time.time()  # Start time
@@ -93,24 +88,27 @@ def record_video(filename, duration=10):
             if ret:
                 out.write(frame)
                 frame_count += 1
-                # Removed cv2.imshow - no need to display live feed
+                # Display the live video feed on the screen
+
+                # Check for exit key press (Esc)
+                if cv2.waitKey(1) & 0xFF == 27:  # 27 is the ASCII value for the Esc key
+                    print("Escape key pressed, stopping recording.")
+                    break
             else:
                 print("Error: Unable to read frame.")
                 break
     except Exception as e:
         print(f"Exception during video recording: {e}")
-        return False
     finally:
         cap.release()
         out.release()
         cv2.destroyAllWindows()
         elapsed_time = time.time() - start_time
         print(f"Recording stopped after {elapsed_time:.2f} seconds. Total frames captured: {frame_count}")
-        return True  # Indicate success
-        
+
         # Convert the recorded video to .mp4 format using ffmpeg
-    mp4_filename = filename.replace('.avi', '.mp4')
-    convert_video_to_mp4(filename, mp4_filename)
+        mp4_filename = filename.replace('.avi', '.mp4')
+        convert_video_to_mp4(filename, mp4_filename)
 
 # Function to convert AVI video to MP4 using ffmpeg
 def convert_video_to_mp4(input_filename, output_filename):
